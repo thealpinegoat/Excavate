@@ -20,7 +20,7 @@ public interface IExcavatable<C extends Block> {
                         xo = x + i;
                         yo = y + j;
                         zo = z + k;
-                        if (world.getBlockId(xo, yo, zo) == this.getBlockId()) {
+                        if (IsExcavateMatch(world.getBlockId(xo, yo, zo), this.getBlockId())) {
                             world.setBlockWithNotify(xo, yo, zo, 0);
                             world.dropItem(xo, yo, zo, new ItemStack(Item.itemsList[this.idDropped()]));
                             excavationSize++;
@@ -31,6 +31,15 @@ public interface IExcavatable<C extends Block> {
             }
         }
         return excavationSize;
+    }
+    default boolean IsExcavateMatch(int blockAId, int blockBId) {
+        if (blockAId == blockBId) {
+            return true;
+        }
+        if (ExcavateMod.modBlocksMap.containsKey(blockAId) && ExcavateMod.modBlocksMap.containsKey(blockBId)) {
+            return ExcavateMod.modBlocksMap.get(blockAId).getClass() == ExcavateMod.modBlocksMap.get(blockBId).getClass();
+        }
+        return false;
     }
     boolean IsPlayerToolValid(EntityPlayer player);
     int getBlockId();

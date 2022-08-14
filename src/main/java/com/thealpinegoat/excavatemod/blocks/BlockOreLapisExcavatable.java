@@ -1,9 +1,10 @@
-package com.thealpinegoat.excavatemod;
+package com.thealpinegoat.excavatemod.blocks;
 
+import com.thealpinegoat.excavatemod.IOreExcavatable;
 import net.minecraft.src.*;
 
-public class BlockOreDiamondExcavatable extends BlockOreDiamond implements IOreExcavatable{
-    public BlockOreDiamondExcavatable(int i) {
+public class BlockOreLapisExcavatable extends BlockOreLapis implements IOreExcavatable {
+    public BlockOreLapisExcavatable(Integer i) {
         super(i);
         this.setHardness(3.0F);
     }

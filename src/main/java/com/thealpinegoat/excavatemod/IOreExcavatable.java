@@ -5,7 +5,6 @@ import net.minecraft.src.*;
 public interface IOreExcavatable extends IExcavatable{
     default boolean IsPlayerToolValid(EntityPlayer player) {
         if (player == null) {
-            ExcavateMod.getLogger().severe("Player is null!");
             return false;
         }
         ItemStack currentEquippedItemStack = player.getCurrentEquippedItem();
@@ -28,6 +27,8 @@ public interface IOreExcavatable extends IExcavatable{
             if (heldItem.getItem().isDamagable() && Block.blocksList[getBlockId()].getHardness() > 0.0f) {
                 int blocksBroken = Excavate(world, x, y, z);
                 heldItem.damageItem(blocksBroken, null);
+            } else {
+                Excavate(world, x, y, z);
             }
         }
     }

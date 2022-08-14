@@ -1,10 +1,11 @@
-package com.thealpinegoat.excavatemod;
+package com.thealpinegoat.excavatemod.blocks;
 
+import com.thealpinegoat.excavatemod.IOreExcavatable;
 import net.minecraft.src.*;
 
-public class BlockOreCoalExcavatable extends BlockOreCoal implements IOreExcavatable {
-    public BlockOreCoalExcavatable(int i) {
-        super(i);
+public class BlockOreRedstoneExcavatable extends BlockOreRedstone implements IOreExcavatable {
+    public BlockOreRedstoneExcavatable(Integer i, Boolean flag) {
+        super(i, flag);
         this.setHardness(3.0F);
     }
 

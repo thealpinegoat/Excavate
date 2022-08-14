@@ -1,48 +1,41 @@
 package com.thealpinegoat.excavatemod.utils;
 
 import net.minecraft.src.Block;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemBlock;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 
 public class ModBlockUtils {
-    public static <T> T TryCreateOverrideBlock(Block oldBlock, Class<T> newBlockClazz) {
+    public static <T extends Block> T OverrideBlock(Block oldBlock, Class<T> newBlockClazz) {
+        return OverrideBlockWithParameters(oldBlock, newBlockClazz, new Object[]{});
+    }
+
+    public static <T extends Block> T OverrideBlockWithParameters(Block oldBlock, Class<T> newBlockClazz, Object[] parameters) {
+        Object[] newParams = new Object[parameters.length + 1];
+        newParams[0] = oldBlock.blockID;
+        System.arraycopy(parameters, 0, newParams, 1, parameters.length);
+
+        Class<?>[] parameterTypes = new Class[parameters.length + 1];
+        parameterTypes[0] = Integer.class;
+        for (int i = 0; i < parameters.length; i++) {
+            parameterTypes[i+1] = parameters[i].getClass();
+        }
+
         if (Block.blocksList[oldBlock.blockID] != null) {
             Block.blocksList[oldBlock.blockID] = null;
         }
         try {
-            Constructor<T> constructor = newBlockClazz.getDeclaredConstructor(int.class);
-            T newBlock = constructor.newInstance(oldBlock.blockID);
-            Block.blocksList[oldBlock.blockID] = (Block) newBlock;
+            Constructor<T> constructor = newBlockClazz.getDeclaredConstructor(parameterTypes);
+            T newBlock = constructor.newInstance(newParams);
+            CopyOldBlockToNew(oldBlock, newBlock);
             return newBlock;
         } catch (Exception e) {
             return null;
         }
     }
-
-    public static <T> T TryCreateOverrideBlock(Block oldBlock, Class<T> newBlockClazz, boolean bool) {
-        if (Block.blocksList[oldBlock.blockID] != null) {
-            Block.blocksList[oldBlock.blockID] = null;
-        }
-        try {
-            Constructor<T> constructor = newBlockClazz.getDeclaredConstructor(int.class, boolean.class);
-            T newBlock = constructor.newInstance(oldBlock.blockID, bool);
-            Block.blocksList[oldBlock.blockID] = (Block) newBlock;
-            return newBlock;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public static int FindNextFreeBlockId() {
-        for (int id = 0; id < Block.blocksList.length; id++) {
-            if (Block.blocksList[id] == null) {
-                return id;
-            }
-        }
-        // No free block IDs found.
-        return -1;
+    public static void CopyOldBlockToNew(Block oldBlock, Block newBlock) {
+        Block.blocksList[oldBlock.blockID] = newBlock;
+        newBlock.setBlockName(oldBlock.getBlockName(0).substring(5));
+        newBlock.atlasIndices = oldBlock.atlasIndices;
+        newBlock.stepSound = oldBlock.stepSound;
     }
 }

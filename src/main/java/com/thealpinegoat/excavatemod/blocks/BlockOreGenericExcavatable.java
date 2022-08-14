@@ -1,9 +1,10 @@
-package com.thealpinegoat.excavatemod;
+package com.thealpinegoat.excavatemod.blocks;
 
+import com.thealpinegoat.excavatemod.IOreExcavatable;
 import net.minecraft.src.*;
 
-public class BlockOreGenericExcavatable extends Block implements IOreExcavatable{
-    public BlockOreGenericExcavatable(int i) {
+public class BlockOreGenericExcavatable extends Block implements IOreExcavatable {
+    public BlockOreGenericExcavatable(Integer i) {
         super(i, Material.rock);
         this.setHardness(3.0F);
     }
